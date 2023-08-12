@@ -1,3 +1,4 @@
+
 import {makeT} from 'app/client/lib/localization';
 import {localStorageObs} from 'app/client/lib/localStorageObs';
 import {getStorage} from 'app/client/lib/storage';
@@ -25,12 +26,20 @@ type CardPage =
   | 'support-grist'
   | 'opted-in';
 
+
+
+
+
 /**
  * Nudges users to support Grist by opting in to telemetry.
  *
  * This currently includes a button that opens a card with the nudge.
  * The button is hidden when the card is visible, and vice versa.
  */
+
+
+
+
 export class SupportGristNudge extends Disposable {
   private readonly _telemetryModel: TelemetryModel = new TelemetryModelImpl(this._appModel);
 
