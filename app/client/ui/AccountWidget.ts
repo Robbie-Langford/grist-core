@@ -216,6 +216,9 @@ export class AccountWidget extends Disposable {
   }
 
   private _maybeBuildSupportGristPageMenuItem() {
+    
+    return [''];
+    /* Norv Comment
     const {deploymentType} = getGristConfig();
     if (deploymentType !== 'core') {
       return null;
@@ -227,6 +230,7 @@ export class AccountWidget extends Disposable {
       urlState().setLinkUrl({supportGrist: 'support-grist'}),
       testId('usermenu-support-grist'),
     );
+    */
   }
 }
 

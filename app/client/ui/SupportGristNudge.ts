@@ -129,7 +129,9 @@ export class SupportGristNudge extends Disposable {
   }
 
   private _buildCard() {
-    return cssCard(
+    return [''];
+    /* Norv Comment
+     cssCard(
       dom.domComputed(this._currentPage, page => {
         if (page === 'support-grist') {
           return this._buildSupportGristCardContent();
@@ -138,11 +140,12 @@ export class SupportGristNudge extends Disposable {
         }
       }),
       testId('card'),
-    );
+    ); */
   }
 
   private _buildSupportGristCardContent() {
-    return [
+    return [''];
+    /*
       cssCloseButton(
         icon('CrossBig'),
         dom.on('click', () => this._buttonState.set('collapsed')),
@@ -168,7 +171,7 @@ export class SupportGristNudge extends Disposable {
         dom.on('click', () => this._optInToTelemetry()),
         testId('card-opt-in'),
       ),
-    ];
+    ]; */
   }
 
   private _buildOptedInCardContent() {

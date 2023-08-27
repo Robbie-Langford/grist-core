@@ -23,7 +23,7 @@ export const cssAddNewButton = styled('div', `
   align-items: center;
   margin: 22px 0px 22px 0px;
   height: 40px;
-  color: ${theme.controlPrimaryFg};
+  color:  ${theme.controlPrimaryFg};
   border: none;
   border-radius: 4px;
 

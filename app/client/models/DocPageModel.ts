@@ -190,6 +190,7 @@ export class DocPageModelImpl extends Disposable implements DocPageModel {
   public createLeftPane(leftPanelOpen: Observable<boolean>) {
     return cssLeftPanel(
       dom.maybe(this.gristDoc, (activeDoc) => [
+        /* Norv Comment
         addNewButton(leftPanelOpen,
           menu(() => addMenu(this.importSources, activeDoc, this.isReadonly.get()), {
             placement: 'bottom-start',
@@ -199,6 +200,7 @@ export class DocPageModelImpl extends Disposable implements DocPageModel {
           testId('dp-add-new'),
           dom.cls('tour-add-new'),
         ),
+        */
         cssScrollPane(
           dom.create(buildPagesDom, activeDoc, leftPanelOpen),
           dom.create(tools, activeDoc, leftPanelOpen),
