@@ -48,7 +48,7 @@ Then install yarn (the `-g` flag here means that yarn will be available globally
 $ npm install -g yarn
 ```
 
-Now each time you want to load nodejs and yarn in your environment, just run the following command at grist-core root directory:
+Now each time you want to lad nodejs and yarn in your environment, just run the following command at grist-core root directory:
 
 ```bash
 $ nvm use
