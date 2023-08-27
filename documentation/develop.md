@@ -1,3 +1,6 @@
+This process can be achieved by running ./setup_env.sh in terminal
+
+
 # Development
 
 Please as a first start, tell the community about your intent to develop a feature or fix a bug. Search for the associated issue if it exists or open one with steps to reproduce (for bugs) or a [user story](https://en.wikipedia.org/wiki/User_story#Principle) (for features).
