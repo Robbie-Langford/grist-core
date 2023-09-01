@@ -1,8 +1,11 @@
 :root {
   /* logo */
-  --icon-GristLogo: url("ui-icons/Logo/GristLogo.svg") !important;
-  --grist-logo-bg: #040404 !important;
-  --grist-logo-size: 26px 26px !important;
+  --icon-ActualGristLogo: url("ui-icons/Logo/GristLogo.svg") !important;
+  --icon-NorvLogo: url("ui-icons/Logo/NorvLogo.svg") !important;
+  --icon-RedLogo: url("ui-icons/Logo/RedLogo.svg") !important;
+  --icon-GristLogo: var(--icon-RedLogo) !important;
+  --grist-logo-bg: #F9F9F9 !important;
+  --grist-logo-size: 40px 40px !important;
 
   /* colors */
   --grist-color-light-grey: #F7F7F7 !important;
