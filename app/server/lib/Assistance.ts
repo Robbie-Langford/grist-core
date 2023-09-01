@@ -117,23 +117,54 @@ class RetryableError extends Error {
 }
 
 /**
- * A flavor of assistant for use with the OpenAI API.
+ * A flavor of assistant for use with the OpenAI chat completion endpoint
+ * and tools with a compatible endpoint (e.g. llama-cpp-python).
  * Tested primarily with gpt-3.5-turbo.
+ *
+ * Uses the ASSISTANT_CHAT_COMPLETION_ENDPOINT endpoint if set, else
+ * an OpenAI endpoint. Passes ASSISTANT_API_KEY or OPENAI_API_KEY in
+ * a header if set. An api key is required for the default OpenAI
+ * endpoint.
+ *
+ * If a model string is set in ASSISTANT_MODEL, this will be passed
+ * along. For the default OpenAI endpoint, a gpt-3.5-turbo variant
+ * will be set by default.
+ *
+ * If a request fails because of context length limitation, and the
+ * default OpenAI endpoint is in use, the request will be retried
+ * with ASSISTANT_LONGER_CONTEXT_MODEL (another gpt-3.5
+ * variant by default). Set this variable to "" if this behavior is
+ * not desired for the default OpenAI endpoint. If a custom endpoint was
+ * provided, this behavior will only happen if
+ * ASSISTANT_LONGER_CONTEXT_MODEL is explicitly set.
+ *
+ * An optional ASSISTANT_MAX_TOKENS can be specified.
  */
 export class OpenAIAssistant implements Assistant {
   public static DEFAULT_MODEL = "gpt-3.5-turbo-0613";
-  public static LONGER_CONTEXT_MODEL = "gpt-3.5-turbo-16k-0613";
+  public static DEFAULT_LONGER_CONTEXT_MODEL = "gpt-3.5-turbo-16k-0613";
 
-  private _apiKey: string;
+  private _apiKey?: string;
+  private _model?: string;
+  private _longerContextModel?: string;
   private _endpoint: string;
+  private _maxTokens = process.env.ASSISTANT_MAX_TOKENS ?
+      parseInt(process.env.ASSISTANT_MAX_TOKENS, 10) : undefined;
 
   public constructor() {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      throw new Error('OPENAI_API_KEY not set');
+    const apiKey = process.env.ASSISTANT_API_KEY || process.env.OPENAI_API_KEY;
+    const endpoint = process.env.ASSISTANT_CHAT_COMPLETION_ENDPOINT;
+    if (!apiKey && !endpoint) {
+      throw new Error('Please set either OPENAI_API_KEY or ASSISTANT_CHAT_COMPLETION_ENDPOINT');
     }
     this._apiKey = apiKey;
-    this._endpoint = `https://api.openai.com/v1/chat/completions`;
+    this._model = process.env.ASSISTANT_MODEL;
+    this._longerContextModel = process.env.ASSISTANT_LONGER_CONTEXT_MODEL;
+    if (!endpoint) {
+      this._model = this._model ?? OpenAIAssistant.DEFAULT_MODEL;
+      this._longerContextModel = this._longerContextModel ?? OpenAIAssistant.DEFAULT_LONGER_CONTEXT_MODEL;
+    }
+    this._endpoint = endpoint || `https://api.openai.com/v1/chat/completions`;
   }
 
   public async apply(
@@ -144,20 +175,18 @@ export class OpenAIAssistant implements Assistant {
       newMessages.push({
         role: 'system',
         content: 'You are a helpful assistant for a user of software called Grist. ' +
-          'Below are one or more Python classes. ' +
-          'The last method needs completing. ' +
-          "The user will probably give a description of what they want the method (a 'formula') to return. " +
-          'If so, your response should include the method body as Python code in a markdown block. ' +
-          'Do not include the class or method signature, just the method body. ' +
-          'If your code starts with `class`, `@dataclass`, or `def` it will fail. Only give the method body. ' +
-          'You can import modules inside the method body if needed. ' +
-          'You cannot define additional functions or methods. ' +
-          'The method should be a pure function that performs some computation and returns a result. ' +
+          "Below are one or more fake Python classes representing the structure of the user's data. " +
+          'The function at the end needs completing. ' +
+          "The user will probably give a description of what they want the function (a 'formula') to return. " +
+          'If so, your response should include the function BODY as Python code in a markdown block. ' +
+          "Your response will be automatically concatenated to the code below, so you mustn't repeat any of it. " +
+          'You cannot change the function signature or define additional functions or classes. ' +
+          'It should be a pure function that performs some computation and returns a result. ' +
           'It CANNOT perform any side effects such as adding/removing/modifying rows/columns/cells/tables/etc. ' +
           'It CANNOT interact with files/databases/networks/etc. ' +
           'It CANNOT display images/charts/graphs/maps/etc. ' +
           'If the user asks for these things, tell them that you cannot help. ' +
-          'The method uses `rec` instead of `self` as the first parameter.\n\n' +
+          "\n\n" +
           '```python\n' +
           await makeSchemaPromptV1(optSession, doc, request) +
           '\n```',
@@ -198,6 +227,10 @@ export class OpenAIAssistant implements Assistant {
 
     const userIdHash = getUserHash(optSession);
     const completion: string = await this._getCompletion(messages, userIdHash);
+
+    // It's nice to have this ready to uncomment for debugging.
+    // console.log(completion);
+
     const response = await completionToResponse(doc, request, completion);
     if (response.suggestedFormula) {
       // Show the tweaked version of the suggested formula to the user (i.e. the one that's
@@ -222,19 +255,25 @@ export class OpenAIAssistant implements Assistant {
   }
 
   private async _fetchCompletion(messages: AssistanceMessage[], userIdHash: string, longerContext: boolean) {
+    const model = longerContext ? this._longerContextModel : this._model;
     const apiResponse = await DEPS.fetch(
       this._endpoint,
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${this._apiKey}`,
+          ...(this._apiKey ? {
+            "Authorization": `Bearer ${this._apiKey}`,
+          } : undefined),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           messages,
           temperature: 0,
-          model: longerContext ? OpenAIAssistant.LONGER_CONTEXT_MODEL : OpenAIAssistant.DEFAULT_MODEL,
+          ...(model ? { model } : undefined),
           user: userIdHash,
+          ...(this._maxTokens ? {
+            max_tokens: this._maxTokens,
+          } : undefined),
         }),
       },
     );
@@ -242,7 +281,7 @@ export class OpenAIAssistant implements Assistant {
     const result = JSON.parse(resultText);
     const errorCode = result.error?.code;
     if (errorCode === "context_length_exceeded" || result.choices?.[0].finish_reason === "length") {
-      if (!longerContext) {
+      if (!longerContext && this._longerContextModel) {
         log.info("Switching to longer context model...");
         throw new SwitchToLongerContext();
       } else if (messages.length <= 2) {
@@ -392,14 +431,10 @@ export function getAssistant() {
   if (process.env.OPENAI_API_KEY === 'test') {
     return new EchoAssistant();
   }
-  if (process.env.OPENAI_API_KEY) {
+  if (process.env.OPENAI_API_KEY || process.env.ASSISTANT_CHAT_COMPLETION_ENDPOINT) {
     return new OpenAIAssistant();
   }
-  // Maintaining this is too much of a burden for now.
-  // if (process.env.HUGGINGFACE_API_KEY) {
-  //   return new HuggingFaceAssistant();
-  // }
-  throw new Error('Please set OPENAI_API_KEY');
+  throw new Error('Please set OPENAI_API_KEY or ASSISTANT_CHAT_COMPLETION_ENDPOINT');
 }
 
 /**

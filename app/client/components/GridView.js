@@ -316,6 +316,20 @@ GridView.gridCommands = {
     this._shiftSelect(-1, this.cellSelector.col.end, selector.ROW,
                       this.viewSection.viewFields().peekLength - 1);
   },
+  ctrlShiftDown: function () {
+    this._shiftSelectUntilContent(selector.COL, 1, this.cellSelector.row.end, this.getLastDataRowIndex());
+  },
+  ctrlShiftUp: function () {
+    this._shiftSelectUntilContent(selector.COL, -1, this.cellSelector.row.end, this.getLastDataRowIndex());
+  },
+  ctrlShiftRight: function () {
+    this._shiftSelectUntilContent(selector.ROW, 1, this.cellSelector.col.end,
+      this.viewSection.viewFields().peekLength - 1);
+  },
+  ctrlShiftLeft: function () {
+    this._shiftSelectUntilContent(selector.ROW, -1, this.cellSelector.col.end,
+      this.viewSection.viewFields().peekLength - 1);
+  },
   fillSelectionDown: function() { this.fillSelectionDown(); },
   selectAll: function() { this.selectAll(); },
 
@@ -402,6 +416,120 @@ GridView.prototype._shiftSelect = function(step, selectObs, exemptType, maxVal) 
   var newVal = gutil.clamp(selectObs() + step, 0, maxVal);
   selectObs(newVal);
 };
+
+GridView.prototype._shiftSelectUntilContent = function(type, direction, selectObs, maxVal) {
+  const selection = {
+    colStart: this.cellSelector.col.start(),
+    colEnd: this.cellSelector.col.end(),
+    rowStart: this.cellSelector.row.start(),
+    rowEnd: this.cellSelector.row.end(),
+  };
+
+  const steps = this._stepsToContent(type, direction, selection, maxVal);
+  if (steps > 0) { this._shiftSelect(direction * steps, selectObs, type, maxVal); }
+}
+
+GridView.prototype._stepsToContent = function (type, direction, selection, maxVal) {
+  const {colEnd: colEnd, rowEnd: rowEnd} = selection;
+  let selectionData;
+
+  const cursorCol = this.cursor.fieldIndex();
+  const cursorRow = this.cursor.rowIndex();
+
+  if (type === selector.ROW && direction > 0) {
+    if (colEnd + 1 > maxVal) { return 0; }
+
+    selectionData = this._selectionData({colStart: colEnd, colEnd: maxVal, rowStart: cursorRow, rowEnd: cursorRow});
+  } else if (type === selector.ROW && direction < 0) {
+    if (colEnd - 1 < 0) { return 0; }
+
+    selectionData = this._selectionData({colStart: 0, colEnd, rowStart: cursorRow, rowEnd: cursorRow});
+  } else if (type === selector.COL && direction > 0) {
+    if (rowEnd + 1 > maxVal) { return 0; }
+
+    selectionData = this._selectionData({colStart: cursorCol, colEnd: cursorCol, rowStart: rowEnd, rowEnd: maxVal});
+  } else if (type === selector.COL && direction < 0) {
+    if (rowEnd - 1 > maxVal) { return 0; }
+
+    selectionData = this._selectionData({colStart: cursorCol, colEnd: cursorCol, rowStart: 0, rowEnd});
+  }
+
+  const {fields, rowIndices} = selectionData;
+  if (type === selector.ROW && direction < 0) {
+    // When moving selection left, we step through fields in reverse order.
+    fields.reverse();
+  }
+  if (type === selector.COL && direction < 0) {
+    // When moving selection up, we step through rows in reverse order.
+    rowIndices.reverse();
+  }
+
+  const colValuesByIndex = {};
+  for (const field of fields) {
+    const displayColId = field.displayColModel.peek().colId.peek();
+    colValuesByIndex[field._index()] = this.tableModel.tableData.getColValues(displayColId);
+  }
+
+  let steps = 0;
+
+  if (type === selector.ROW) {
+    const rowIndex = rowIndices[0];
+    const isLastColEmpty = this._isCellValueEmpty(colValuesByIndex[colEnd][rowIndex]);
+    const isNextColEmpty = this._isCellValueEmpty(colValuesByIndex[colEnd + direction][rowIndex]);
+    const shouldStopOnEmptyValue = !isLastColEmpty && !isNextColEmpty;
+    for (let i = 1; i < fields.length; i++) {
+      const hasEmptyValues = this._isCellValueEmpty(colValuesByIndex[fields[i]._index()][rowIndex]);
+      if (hasEmptyValues && shouldStopOnEmptyValue) {
+        return steps;
+      } else if (!hasEmptyValues && !shouldStopOnEmptyValue) {
+        return steps + 1;
+      }
+
+      steps += 1;
+    }
+  } else {
+    const colValues = colValuesByIndex[fields[0]._index()];
+    const isLastRowEmpty = this._isCellValueEmpty(colValues[rowIndices[0]]);
+    const isNextRowEmpty = this._isCellValueEmpty(colValues[rowIndices[1]]);
+    const shouldStopOnEmptyValue = !isLastRowEmpty && !isNextRowEmpty;
+    for (let i = 1; i < rowIndices.length; i++) {
+      const hasEmptyValues = this._isCellValueEmpty(colValues[rowIndices[i]]);
+      if (hasEmptyValues && shouldStopOnEmptyValue) {
+        return steps;
+      } else if (!hasEmptyValues && !shouldStopOnEmptyValue) {
+        return steps + 1;
+      }
+
+      steps += 1;
+    }
+  }
+
+  return steps;
+}
+
+GridView.prototype._selectionData = function({colStart, colEnd, rowStart, rowEnd}) {
+  const fields = [];
+  for (let i = colStart; i <= colEnd; i++) {
+    const field = this.viewSection.viewFields().at(i);
+    if (!field) { continue; }
+
+    fields.push(field);
+  }
+
+  const rowIndices = [];
+  for (let i = rowStart; i <= rowEnd; i++) {
+    const rowId = this.viewData.getRowId(i);
+    if (!rowId) { continue; }
+
+    rowIndices.push(this.tableModel.tableData.getRowIdIndex(rowId));
+  }
+
+  return {fields, rowIndices};
+}
+
+GridView.prototype._isCellValueEmpty = function(value) {
+  return value === null || value === undefined || value === '' || value === 'false';
+}
 
 /**
  * Pastes the provided data at the current cursor.
@@ -532,15 +660,15 @@ GridView.prototype.fillSelectionDown = function() {
 
 
 /**
- * Returns a GridSelection of the selected rows and cols
+ * Returns a CopySelection of the selected rows and cols
  * @returns {Object} CopySelection
  */
 GridView.prototype.getSelection = function() {
-  var rowIds = [], fields = [], rowStyle = {}, colStyle = {};
-  var colStart = this.cellSelector.colLower();
-  var colEnd = this.cellSelector.colUpper();
-  var rowStart = this.cellSelector.rowLower();
-  var rowEnd = this.cellSelector.rowUpper();
+  let rowIds = [], fields = [], rowStyle = {}, colStyle = {};
+  let colStart = this.cellSelector.colLower();
+  let colEnd = this.cellSelector.colUpper();
+  let rowStart = this.cellSelector.rowLower();
+  let rowEnd = this.cellSelector.rowUpper();
 
   // If there is no selection, just copy/paste the cursor cell
   if (this.cellSelector.isCurrentSelectType(selector.NONE)) {
@@ -1097,7 +1225,6 @@ GridView.prototype.buildDom = function() {
                 kd.toggleClass('font-strikethrough', headerFontStrikethrough),
                 kd.style('--frozen-position', () => ko.unwrap(this.frozenPositions.at(field._index()))),
                 kd.toggleClass("frozen", () => ko.unwrap(this.frozenMap.at(field._index()))),
-                kd.toggleClass("hover-column", isTooltip),
                 dom.autoDispose(isEditingLabel),
                 dom.autoDispose(isTooltip),
                 dom.testId("GridView_columnLabel"),
@@ -1136,8 +1263,7 @@ GridView.prototype.buildDom = function() {
                     optCommands: renameCommands
                   }),
                 ),
-                dom.on("mouseenter", () => self.changeHover(field._index())),
-                dom.on("mouseleave", () => self.changeHover(-1)),
+                self._showTooltipOnHover(field, isTooltip),
                 self.isPreview ? null : menuToggle(null,
                   kd.cssClass('g-column-main-menu'),
                   kd.cssClass('g-column-menu-btn'),
@@ -1347,6 +1473,12 @@ GridView.prototype.buildDom = function() {
               ko.unwrap(self.isColSelected.at(field._index())) &&
               self.cellSelector.isRowSelected(row._index());
           });
+
+          var isTooltip = ko.pureComputed(() =>
+            self.editingFormula() &&
+            ko.unwrap(self.hoverColumn) === field._index()
+          );
+
           return dom(
             'div.field',
             kd.style('--frozen-position', () => ko.unwrap(self.frozenPositions.at(field._index()))),
@@ -1356,10 +1488,7 @@ GridView.prototype.buildDom = function() {
             dom.autoDispose(isCellSelected),
             dom.autoDispose(isCellActive),
             dom.autoDispose(isSelected),
-            dom.on("mouseenter", () => self.changeHover(field._index())),
-            kd.toggleClass("hover-column", () =>
-              self.editingFormula() &&
-              ko.unwrap(self.hoverColumn) === (field._index())),
+            self._showTooltipOnHover(field, isTooltip),
             kd.style('width', field.widthPx),
             //TODO: Ensure that fields in a row resize when
             //a cell in that row becomes larger
@@ -1435,11 +1564,15 @@ GridView.prototype._createColSelectedObs = function(col) {
 // Callbacks for mouse events for the selector object
 
 GridView.prototype.cellMouseDown = function(elem, event) {
+  let col = this.domToColModel(elem, selector.CELL);
+  if (this.hoverColumn() === col._index()) {
+    return this._tooltipMouseDown(elem, selector.CELL);
+  }
+
   if (event.shiftKey) {
     // Change focus before running command so that the correct viewsection's cursor is moved.
     this.viewSection.hasFocus(true);
     let row = this.domToRowModel(elem, selector.CELL);
-    let col = this.domToColModel(elem, selector.CELL);
     this.cellSelector.selectArea(this.cursor.rowIndex(), this.cursor.fieldIndex(),
                                  row._index(), col._index());
   } else {
@@ -1448,10 +1581,22 @@ GridView.prototype.cellMouseDown = function(elem, event) {
 };
 
 GridView.prototype.colMouseDown = function(elem, event) {
+  let col = this.domToColModel(elem, selector.COL);
+  if (this.hoverColumn() === col._index()) {
+    return this._tooltipMouseDown(elem, selector.COL);
+  }
+
   this._colClickTime = Date.now();
   this.assignCursor(elem, selector.COL);
   // Clicking the column header selects all rows except the add row.
   this.cellSelector.row.end(this.getLastDataRowIndex());
+};
+
+GridView.prototype._tooltipMouseDown = function(elem, elemType) {
+  let row = this.domToRowModel(elem, elemType);
+  let col = this.domToColModel(elem, elemType);
+  // FormulaEditor.ts overrides this command to insert the column id of the clicked column.
+  commands.allCommands.setCursor.run(row, col);
 };
 
 GridView.prototype.rowMouseDown = function(elem, event) {
@@ -1468,12 +1613,16 @@ GridView.prototype.rowMouseMove = function(event) {
 };
 
 GridView.prototype.colMouseMove = function(event) {
+  if (this.editingFormula()) { return; }
+
   var currentCol = Math.min(this.getMousePosCol(event.pageX),
                             this.viewSection.viewFields().peekLength - 1);
   this.cellSelector.col.end(currentCol);
 };
 
 GridView.prototype.cellMouseMove = function(event) {
+  if (this.editingFormula()) { return; }
+
   this.colMouseMove(event);
   this.rowMouseMove(event);
   // Maintain single cells cannot be selected invariant
@@ -1783,6 +1932,20 @@ GridView.prototype._duplicateRows = async function() {
 
 GridView.prototype._clearCopySelection = function() {
   this.copySelection(null);
+};
+
+GridView.prototype._showTooltipOnHover = function(field, isShowingTooltip) {
+  return [
+    kd.toggleClass("hover-column", isShowingTooltip),
+    dom.on('mouseenter', () => {
+      this.changeHover(field._index());
+    }),
+    dom.on('mousedown', (ev) => {
+      if (isShowingTooltip()) {
+        ev.preventDefault();
+      }
+    }),
+  ];
 };
 
 function buildStyleOption(owner, computedRule, optionName) {

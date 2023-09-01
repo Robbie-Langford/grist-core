@@ -183,7 +183,7 @@
         "Activation": "Активация",
         "Billing Account": "Расчетный счет",
         "Sign In": "Войти",
-        "Sign Up": "Подписаться",
+        "Sign Up": "Зарегистрироваться",
         "Use This Template": "Использовать этот шаблон"
     },
     "ActionLog": {
@@ -260,7 +260,10 @@
         "Replacing the original requires editing rights on the original document.": "Для замены оригинала требуются права на редактирование исходного документа.",
         "To save your changes, please sign up, then reload this page.": "Чтобы сохранить изменения, пожалуйста зарегистрируйтесь, а затем перезагрузите эту страницу.",
         "You do not have write access to the selected workspace": "У вас нет прав на запись в выбранное рабочее пространство",
-        "You do not have write access to this site": "У вас нет права записи для этого сайта"
+        "You do not have write access to this site": "У вас нет права записи для этого сайта",
+        "Remove all data but keep the structure to use as a template": "Удалить все данные, но сохранить структуру для использования в качестве шаблона.",
+        "Download full document and history": "Скачать полный документ и историю",
+        "Remove document history (can significantly reduce file size)": "Удалить историю документа (может значительно уменьшить размер файла)"
     },
     "ShareMenu": {
         "Back to Current": "Вернуться к текущему",
@@ -282,7 +285,8 @@
         "Send to Google Drive": "Отправить в Google Диск",
         "Save Document": "Сохранить документ",
         "Work on a Copy": "Работа над копией",
-        "Share": "Поделиться"
+        "Share": "Поделиться",
+        "Download...": "Скачать..."
     },
     "SortConfig": {
         "Search Columns": "Поиск по столбцам",
@@ -549,7 +553,18 @@
         "{{count}} unmatched field in import_other": "{{count}} несовпадающие поля при импорте",
         "{{count}} unmatched field in import_one": "{{count}} несовпадающее поле при импорте",
         "{{count}} unmatched field_one": "{{count}} несовпадающее поле",
-        "{{count}} unmatched field_other": "{{count}} несовпадающие поля"
+        "{{count}} unmatched field_other": "{{count}} несовпадающие поля",
+        "Column Mapping": "Сопоставление столбцов",
+        "Column mapping": "Сопоставление столбцов",
+        "Destination table": "Таблица назначения",
+        "Grist column": "Grist столбец",
+        "Import from file": "Импорт из файла",
+        "New Table": "Новая таблица",
+        "Revert": "Восстановить",
+        "Skip": "Пропустить",
+        "Skip Table on Import": "Пропустить Таблицу при импорте",
+        "Source column": "Столбец Источника",
+        "Skip Import": "Пропустить импорт"
     },
     "LeftPanelCommon": {
         "Help Center": "Справочный центр"
@@ -757,7 +772,10 @@
         "Default cell style": "Стиль ячейки по умолчанию",
         "Open row styles": "Открыть форматы строк",
         "Cell Style": "Стиль ячейки",
-        "Mixed style": "Смешанный стиль"
+        "Mixed style": "Смешанный стиль",
+        "Default header style": "Стиль заголовка по умолчанию",
+        "HEADER STYLE": "СТИЛЬ ЗАГОЛОВКА",
+        "Header Style": "Стиль заголовка"
     },
     "TypeTransform": {
         "Cancel": "Отмена",
@@ -1063,7 +1081,8 @@
         "Sign up for a free Grist account to start using the Formula AI Assistant.": "Зарегистрируйте бесплатную учетную запись Grist, чтобы начать использовать AI Помощника по формулам.",
         "There are some things you should know when working with me:": "Есть некоторые вещи, которые вы должны знать, работая со мной:",
         "What do you need help with?": "Как я могу вам помочь?",
-        "Hi, I'm the Grist Formula AI Assistant.": "Привет, я AI Помощник по формулам Grist."
+        "Hi, I'm the Grist Formula AI Assistant.": "Привет, я AI Помощник по формулам Grist.",
+        "Formula AI Assistant is only available for logged in users.": "AI Ассистент для формул доступен только для зарегистрированных пользователей."
     },
     "GridView": {
         "Click to insert": "Нажмите для вставки"

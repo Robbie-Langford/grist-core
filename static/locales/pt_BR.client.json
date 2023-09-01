@@ -483,7 +483,18 @@
         "{{count}} unmatched field_other": "{{count}} campos sem equivalente",
         "{{count}} unmatched field in import_other": "{{count}} campos sem equivalente na importação",
         "{{count}} unmatched field in import_one": "{{count}} campo sem equivalente na importação",
-        "{{count}} unmatched field_one": "{{count}} campo sem equivalente"
+        "{{count}} unmatched field_one": "{{count}} campo sem equivalente",
+        "Column Mapping": "Mapeamento de coluna",
+        "Column mapping": "Mapeamento de coluna",
+        "Destination table": "Tabela de destino",
+        "Grist column": "Coluna de Grist",
+        "New Table": "Nova tabela",
+        "Revert": "Reverter",
+        "Skip": "Pular",
+        "Skip Import": "Pular importação",
+        "Source column": "Coluna de origem",
+        "Import from file": "Importar de arquivo",
+        "Skip Table on Import": "Pular tabela na importação"
     },
     "LeftPanelCommon": {
         "Help Center": "Centro de Ajuda"
@@ -511,7 +522,10 @@
         "Update Original": "Atualizar o Original",
         "Workspace": "Área de Trabalho",
         "You do not have write access to the selected workspace": "Você não tem acesso de gravação na área de trabalho selecionada",
-        "You do not have write access to this site": "Você não tem acesso de gravação a este site"
+        "You do not have write access to this site": "Você não tem acesso de gravação a este site",
+        "Download full document and history": "Baixe documento completo e histórico",
+        "Remove all data but keep the structure to use as a template": "Remova todos os dados, mas mantenha a estrutura para usar como um modelo",
+        "Remove document history (can significantly reduce file size)": "Remova o histórico do documento (pode reduzir significativamente o tamanho do arquivo)"
     },
     "NTextBox": {
         "false": "falso",
@@ -648,7 +662,8 @@
         "Show in folder": "Mostrar na pasta",
         "Unsaved": "Não Salvo",
         "Work on a Copy": "Trabalho em uma cópia",
-        "Share": "Compartilhar"
+        "Share": "Compartilhar",
+        "Download...": "Baixar..."
     },
     "SiteSwitcher": {
         "Create new team site": "Criar novo site de equipe",
@@ -996,7 +1011,10 @@
         "Cell Style": "Estilo de célula",
         "Default cell style": "Estilo de célula padrão",
         "Mixed style": "Estilo misto",
-        "Open row styles": "Estilos de linha aberta"
+        "Open row styles": "Estilos de linha aberta",
+        "Default header style": "Estilo de cabeçalho padrão",
+        "Header Style": "Estilo de cabeçalho",
+        "HEADER STYLE": "ESTILO DE CABEÇALHO"
     },
     "ColumnEditor": {
         "COLUMN DESCRIPTION": "DESCRIÇÃO DA COLUNA",
@@ -1127,7 +1145,8 @@
         "Sign up for a free Grist account to start using the Formula AI Assistant.": "Cadastre-se para uma conta gratuita do Grist para começar a usar o Assistente de Fórmula AI.",
         "What do you need help with?": "Em que você precisa de ajuda?",
         "There are some things you should know when working with me:": "Há algumas coisas que você deve saber ao trabalhar comigo:",
-        "Learn more": "Saiba mais"
+        "Learn more": "Saiba mais",
+        "Formula AI Assistant is only available for logged in users.": "O Assistente de Fórmula de IA só está disponível para usuários registrados."
     },
     "GridView": {
         "Click to insert": "Clique para inserir"
