@@ -28,8 +28,11 @@ const t = makeT('LeftPanelCommon');
  * HelpCenter in a new tab.
  */
 export function createHelpTools(appModel: AppModel): DomContents {
+  /* Norv Comment
   if (!isFeatureEnabled("helpCenter")) {
+    */
     return [];
+  /* Norv Comment
   }
   return cssSplitPageEntry(
     cssPageEntryMain(
@@ -45,7 +48,7 @@ export function createHelpTools(appModel: AppModel): DomContents {
         {href: commonUrls.help, target: '_blank'},
       ),
     ),
-  );
+  ); */
 }
 
 /**

@@ -32,6 +32,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
   return cssTools(
     cssTools.cls('-collapsed', (use) => !use(leftPanelOpen)),
     cssSectionHeader(t("TOOLS")),
+    /* Norv Comment
     cssPageEntry(
       cssPageEntry.cls('-selected', (use) => use(gristDoc.activeViewId) === 'acl'),
       cssPageEntry.cls('-disabled', (use) => !use(canViewAccessRules)),
@@ -64,6 +65,8 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
       }),
       testId('access-rules'),
     ),
+    */
+    /* Norv Comment
     cssPageEntry(
       cssPageEntry.cls('-selected', (use) => use(gristDoc.activeViewId) === 'data'),
       cssPageLink(
@@ -72,7 +75,8 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
         testId('raw'),
         urlState().setLinkUrl({docPage: 'data'})
       )
-    ),
+    ), 
+    */
     cssPageEntry(
       cssPageLink(cssPageIcon('Log'), cssLinkText(t("Document History")), testId('log'),
         dom.on('click', () => gristDoc.showTool('docHistory')))
@@ -83,6 +87,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
         cssPageLink(cssPageIcon('Validation'), cssLinkText(t("Validate Data")), testId('validate'),
           dom.on('click', () => gristDoc.showTool('validations'))))
     ),
+    /* Norv Comment
     cssPageEntry(
       cssPageEntry.cls('-selected', (use) => use(gristDoc.activeViewId) === 'code'),
       cssPageLink(cssPageIcon('Code'),
@@ -91,6 +96,8 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
       ),
       testId('code'),
     ),
+    */
+   /* Norv Comment
     cssPageEntry(
       cssPageEntry.cls('-selected', (use) => use(gristDoc.activeViewId) === 'settings'),
       cssPageLink(cssPageIcon('Settings'),
@@ -99,6 +106,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
       ),
       testId('settings'),
     ),
+    */
     cssSpacer(),
     dom.maybe(docPageModel.currentDoc, (doc) => {
       const ex = buildExamples().find(e => e.urlId === doc.urlId);

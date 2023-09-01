@@ -33,7 +33,10 @@ export class AccountWidget extends Disposable {
   }
 
   public buildDom() {
-    return cssAccountWidget(
+    return 
+    [];
+    /* Norv Comment 
+    cssAccountWidget(
       dom.domComputed(use => {
         const isTemplate = Boolean(this._docPageModel && use(this._docPageModel.isTemplate));
         const user = this._appModel.currentValidUser;
@@ -46,9 +49,9 @@ export class AccountWidget extends Disposable {
         }
       }),
       testId('dm-account'),
-    );
+    ); */
   }
-
+  
   private _buildAccountMenuButton(user: FullUser|null) {
     return cssUserIcon(
       createUserImage(user, 'medium', testId('user-icon')),
@@ -93,6 +96,7 @@ export class AccountWidget extends Disposable {
    * Renders the content of the account menu, with a list of available orgs, settings, and sign-out.
    * Note that `user` should NOT be anonymous (none of the items are really relevant).
    */
+  
   private _makeAccountMenu(user: FullUser|null): DomElementArg[] {
     const currentOrg = this._appModel.currentOrg;
 
@@ -247,9 +251,11 @@ export const cssUserIcon = styled('div', `
   cursor: pointer;
 `);
 
-const cssHeartIcon = styled('span', `
+ /* Norv Comment
+ const cssHeartIcon = styled('span', `
   margin-left: 8px;
 `);
+*/
 
 const cssUserInfo = styled('div', `
   padding: 12px 24px 12px 16px;
