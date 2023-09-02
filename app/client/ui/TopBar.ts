@@ -43,7 +43,7 @@ export function createTopBarHome(appModel: AppModel) {
 
     buildLanguageMenu(appModel),
     isAnonymous ? null : buildNotifyMenuButton(appModel.notifier, appModel),
-    dom('div', dom.create(AccountWidget, appModel)),
+    dom('div', dom.create(AccountWidget,/* Norv Comment appModel*/)),
   ];
 }
 
@@ -141,7 +141,7 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
         cssHideForNarrowScreen.cls(''),
       ),
     ]),
-    dom('div', dom.create(AccountWidget, appModel, pageModel)),
+    dom('div', dom.create(AccountWidget,/* Norv Comment appModel, pageModel*/)),
   ];
 }
 

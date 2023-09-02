@@ -53,7 +53,7 @@ export class WelcomePage extends Disposable {
         header: dom.create(AppHeader, this._appModel),
         content: null,
       },
-      headerMain: [cssFlexSpace(), dom.create(AccountWidget, this._appModel)],
+      headerMain: [cssFlexSpace(), dom.create(AccountWidget,/* Norv Comment this._appModel*/)],
       contentMain: (
         page === 'teams' ? dom.create(buildWelcomeSitePicker, this._appModel) :
         this._buildPageContent(page)

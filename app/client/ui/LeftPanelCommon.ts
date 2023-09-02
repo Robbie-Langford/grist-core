@@ -13,15 +13,24 @@
  *      )
  *    )
  */
+/* Norv comment
 import {beaconOpenMessage} from 'app/client/lib/helpScout';
-import {makeT} from 'app/client/lib/localization';
-import {AppModel} from 'app/client/models/AppModel';
-import {testId, theme, vars} from 'app/client/ui2018/cssVars';
-import {icon} from 'app/client/ui2018/icons';
-import {commonUrls, isFeatureEnabled} from 'app/common/gristUrls';
-import {dom, DomContents, Observable, styled} from 'grainjs';
+*/
 
+/* Norv comment
+import {makeT} from 'app/client/lib/localization';
+*/
+import {AppModel} from 'app/client/models/AppModel';
+import {/* Norv Comment testId, */ theme, vars} from 'app/client/ui2018/cssVars';
+import {icon} from 'app/client/ui2018/icons';
+/* Norv Comment
+import {commonUrls, isFeatureEnabled} from 'app/common/gristUrls';
+*/
+import {/* Norv Comment dom, */ DomContents, Observable, styled} from 'grainjs';
+
+/* Norv comment
 const t = makeT('LeftPanelCommon');
+*/
 
 /**
  * Creates the "help tools", a button/link to open HelpScout beacon, and one to open the

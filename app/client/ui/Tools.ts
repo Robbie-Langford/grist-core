@@ -1,11 +1,13 @@
+/* Norv Comment
 import {ACLUsersPopup} from 'app/client/aclui/ACLUsers';
+*/
 import {makeT} from 'app/client/lib/localization';
 import {GristDoc} from 'app/client/components/GristDoc';
 import {urlState} from 'app/client/models/gristUrlState';
 import {getUserOrgPrefObs, markAsSeen} from 'app/client/models/UserPrefs';
 import {showExampleCard} from 'app/client/ui/ExampleCard';
 import {buildExamples} from 'app/client/ui/ExampleInfo';
-import {createHelpTools, cssLinkText, cssMenuTrigger, cssPageEntry, cssPageEntryMain, cssPageEntrySmall,
+import {createHelpTools, cssLinkText, /* Norv Comment cssMenuTrigger, */ cssPageEntry, cssPageEntryMain, cssPageEntrySmall,
         cssPageIcon, cssPageLink, cssSectionHeader, cssSpacer, cssSplitPageEntry,
         cssTools} from 'app/client/ui/LeftPanelCommon';
 import {theme} from 'app/client/ui2018/cssVars';
@@ -13,7 +15,9 @@ import {icon} from 'app/client/ui2018/icons';
 import {confirmModal} from 'app/client/ui2018/modals';
 import {isOwner} from 'app/common/roles';
 import {Disposable, dom, makeTestId, Observable, observable, styled} from 'grainjs';
+/* Norv Comment
 import noop from 'lodash/noop';
+*/
 
 const testId = makeTestId('test-tools-');
 const t = makeT('Tools');

@@ -1,3 +1,4 @@
+/* Norv Coment
 import {AppModel} from 'app/client/models/AppModel';
 import {DocPageModel} from 'app/client/models/DocPageModel';
 import {getLoginOrSignupUrl, getLoginUrl, getLogoutUrl, getSignupUrl, urlState} from 'app/client/models/gristUrlState';
@@ -11,14 +12,17 @@ import {menu, menuDivider, menuItem, menuItemLink, menuSubHeader} from 'app/clie
 import {commonUrls, isFeatureEnabled} from 'app/common/gristUrls';
 import {FullUser} from 'app/common/LoginSessionAPI';
 import * as roles from 'app/common/roles';
-import {Disposable, dom, DomElementArg, styled} from 'grainjs';
+*/
+import {Disposable, /* Norv Comment dom, DomElementArg, styled*/} from 'grainjs';
+/* Norv Comment
 import {cssMenuItem} from 'popweasel';
 import {maybeAddSiteSwitcherSection} from 'app/client/ui/SiteSwitcher';
 import {makeT} from 'app/client/lib/localization';
 import {getGristConfig} from 'app/common/urlUtils';
-
+*/
+/* Norv Comment
 const t = makeT('AccountWidget');
-
+*/
 /**
  * Render the user-icon that opens the account menu.
  *
@@ -28,10 +32,11 @@ const t = makeT('AccountWidget');
  * button.
  */
 export class AccountWidget extends Disposable {
+  /* Norv Comment
   constructor(private _appModel: AppModel, private _docPageModel?: DocPageModel) {
     super();
   }
-
+  */
   public buildDom() {
     return 
     [];
@@ -52,6 +57,7 @@ export class AccountWidget extends Disposable {
     ); */
   }
   
+  /* Norv Comment
   private _buildAccountMenuButton(user: FullUser|null) {
     return cssUserIcon(
       createUserImage(user, 'medium', testId('user-icon')),
@@ -91,12 +97,13 @@ export class AccountWidget extends Disposable {
       testId('dm-account-use-this-template'),
     );
   }
-
+  */
   /**
    * Renders the content of the account menu, with a list of available orgs, settings, and sign-out.
    * Note that `user` should NOT be anonymous (none of the items are really relevant).
    */
   
+  /* Norv Comment
   private _makeAccountMenu(user: FullUser|null): DomElementArg[] {
     const currentOrg = this._appModel.currentOrg;
 
@@ -175,8 +182,9 @@ export class AccountWidget extends Disposable {
       maybeAddSiteSwitcherSection(this._appModel),
     ];
   }
-
+  */
   // Switch BrowserSession to use the given user for the currently loaded org.
+  /* Norv Comment
   private async _switchAccount(user: FullUser) {
     await this._appModel.api.setSessionActive(user.email);
     if (urlState().state.get().doc) {
@@ -222,7 +230,7 @@ export class AccountWidget extends Disposable {
   private _maybeBuildSupportGristPageMenuItem() {
     
     return [''];
-    /* Norv Comment
+
     const {deploymentType} = getGristConfig();
     if (deploymentType !== 'core') {
       return null;
@@ -234,10 +242,11 @@ export class AccountWidget extends Disposable {
       urlState().setLinkUrl({supportGrist: 'support-grist'}),
       testId('usermenu-support-grist'),
     );
-    */
-  }
+    
+  } */
 }
 
+/* Norv Comment
 const cssAccountWidget = styled('div', `
   display: flex;
   margin-right: 16px;
@@ -251,11 +260,9 @@ export const cssUserIcon = styled('div', `
   cursor: pointer;
 `);
 
- /* Norv Comment
  const cssHeartIcon = styled('span', `
   margin-left: 8px;
 `);
-*/
 
 const cssUserInfo = styled('div', `
   padding: 12px 24px 12px 16px;
@@ -325,3 +332,4 @@ const cssSigninButton = styled(bigPrimaryButtonLink, `
 const cssUseThisTemplateButton = styled(primaryButtonLink, `
   margin: 8px;
 `);
+*/

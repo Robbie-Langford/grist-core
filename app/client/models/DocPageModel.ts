@@ -4,15 +4,21 @@ import {loadGristDoc} from 'app/client/lib/imports';
 import {AppModel, getOrgNameOrGuest, reportError} from 'app/client/models/AppModel';
 import {getDoc} from 'app/client/models/gristConfigCache';
 import {docUrl, urlState} from 'app/client/models/gristUrlState';
+/* Norv Comment
 import {addNewButton, cssAddNewButton} from 'app/client/ui/AddNewButton';
+*/
 import {App} from 'app/client/ui/App';
 import {cssLeftPanel, cssScrollPane} from 'app/client/ui/LeftPanelCommon';
 import {buildPagesDom} from 'app/client/ui/Pages';
+/* Norv Comment
 import {openPageWidgetPicker} from 'app/client/ui/PageWidgetPicker';
+*/
 import {tools} from 'app/client/ui/Tools';
 import {bigBasicButton} from 'app/client/ui2018/buttons';
 import {testId} from 'app/client/ui2018/cssVars';
+/* Norv Comment
 import {menu, menuDivider, menuIcon, menuItem, menuText} from 'app/client/ui2018/menus';
+*/
 import {confirmModal} from 'app/client/ui2018/modals';
 import {AsyncFlow, CancelledError, FlowRunner} from 'app/common/AsyncFlow';
 import {delay} from 'app/common/delay';
@@ -24,7 +30,7 @@ import {getReconnectTimeout} from 'app/common/gutil';
 import {canEdit, isOwner} from 'app/common/roles';
 import {Document, NEW_DOCUMENT_CODE, Organization, UserAPI, Workspace} from 'app/common/UserAPI';
 import {Holder, Observable, subscribe} from 'grainjs';
-import {Computed, Disposable, dom, DomArg, DomElementArg} from 'grainjs';
+import {Computed, Disposable, dom, DomArg, /* Norv Comment DomElementArg */} from 'grainjs';
 import {makeT} from 'app/client/lib/localization';
 
 // tslint:disable:no-console
@@ -400,6 +406,7 @@ It also disables formulas. [{{error}}]", {error: err.message})
 }
 
 
+/* Norv Comment
 function addMenu(importSources: ImportSource[], gristDoc: GristDoc, isReadonly: boolean): DomElementArg[] {
   const selectBy = gristDoc.selectBy.bind(gristDoc);
   return [
@@ -433,6 +440,7 @@ function addMenu(importSources: ImportSource[], gristDoc: GristDoc, isReadonly: 
     testId('dp-add-new-menu')
   ];
 }
+*/
 
 function buildDocInfo(doc: Document, mode: OpenDocMode | undefined): DocInfo {
   const idParts = parseUrlId(doc.urlId || doc.id);

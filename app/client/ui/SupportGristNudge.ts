@@ -4,13 +4,17 @@ import {localStorageObs} from 'app/client/lib/localStorageObs';
 import {getStorage} from 'app/client/lib/storage';
 import {tokenFieldStyles} from 'app/client/lib/TokenField';
 import {AppModel} from 'app/client/models/AppModel';
+/* Norv Comment
 import {urlState} from 'app/client/models/gristUrlState';
 import {TelemetryModel, TelemetryModelImpl} from 'app/client/models/TelemetryModel';
 import {bigPrimaryButton} from 'app/client/ui2018/buttons';
-import {colors, isNarrowScreenObs, theme, vars} from 'app/client/ui2018/cssVars';
+*/
+import {colors, isNarrowScreenObs, theme, /* Norv Comment  vars */} from 'app/client/ui2018/cssVars';
 import {icon} from 'app/client/ui2018/icons';
+/* Norv Comment
 import {cssLink} from 'app/client/ui2018/links';
 import {commonUrls} from 'app/common/gristUrls';
+*/
 import {getGristConfig} from 'app/common/urlUtils';
 import {Disposable, dom, makeTestId, Observable, styled} from 'grainjs';
 
@@ -22,9 +26,11 @@ type ButtonState =
   | 'collapsed'
   | 'expanded';
 
+/* Norv Comment 
 type CardPage =
   | 'support-grist'
   | 'opted-in';
+/*
 
 
 
@@ -41,10 +47,11 @@ type CardPage =
 
 
 export class SupportGristNudge extends Disposable {
+  /* Norv Comment
   private readonly _telemetryModel: TelemetryModel = new TelemetryModelImpl(this._appModel);
-
+  */
   private readonly _buttonState: Observable<ButtonState>;
-  private readonly _currentPage: Observable<CardPage>;
+  /* Norv Comment private readonly _currentPage: Observable<CardPage>; */
   private readonly _isClosed: Observable<boolean>;
 
   constructor(private _appModel: AppModel) {
@@ -54,7 +61,7 @@ export class SupportGristNudge extends Disposable {
     this._buttonState = localStorageObs(
       `u=${this._appModel.currentValidUser?.id ?? 0};supportGristNudge`, 'expanded'
     ) as Observable<ButtonState>;
-    this._currentPage = Observable.create(null, 'support-grist');
+    /* Norv Comment this._currentPage = Observable.create(null, 'support-grist'); */
     this._isClosed = Observable.create(this, false);
   }
 
@@ -143,10 +150,9 @@ export class SupportGristNudge extends Disposable {
     ); */
   }
 
+  /* Norv Comment
   private _buildSupportGristCardContent() {
-    return [''];
-    /*
-      cssCloseButton(
+    return cssCloseButton(
         icon('CrossBig'),
         dom.on('click', () => this._buttonState.set('collapsed')),
         testId('card-close'),
@@ -171,9 +177,11 @@ export class SupportGristNudge extends Disposable {
         dom.on('click', () => this._optInToTelemetry()),
         testId('card-opt-in'),
       ),
-    ]; */
+    ];
   }
+  */
 
+  /* Norv Comment
   private _buildOptedInCardContent() {
     return [
       cssCloseButton(
@@ -199,33 +207,41 @@ export class SupportGristNudge extends Disposable {
       ),
     ];
   }
+  */
 
+  /* Norv Comment
   private async _optInToTelemetry() {
     await this._telemetryModel.updateTelemetryPrefs({telemetryLevel: 'limited'});
     this._currentPage.set('opted-in');
     this._markAsDismissed();
-  }
+  } */
 }
 
+/* Norv Comment
 function helpCenterLink() {
   return cssLink(
     t('Help Center'),
     {href: commonUrls.helpTelemetryLimited, target: '_blank'},
   );
 }
+*/
 
+/* Norv Comment
 function supportGristLink() {
   return cssLink(
     t('Support Grist page'),
     {href: urlState().makeUrl({supportGrist: 'support-grist'}), target: '_blank'},
   );
 }
+*/
 
+/* Norv Comment
 const cssCenteredFlex = styled('div', `
   display: flex;
   justify-content: center;
   align-items: center;
 `);
+*/
 
 const cssContributeButton = styled('div', `
   position: relative;
@@ -272,6 +288,7 @@ const cssContributeButtonCloseButton = styled(tokenFieldStyles.cssDeleteButton, 
   }
 `);
 
+/* Norv Comment
 const cssCard = styled('div', `
   width: 297px;
   padding: 24px;
@@ -282,13 +299,17 @@ const cssCard = styled('div', `
   flex-shrink: 0;
   top: 0px;
 `);
+*/
 
+/* Norv Comment
 const cssHeader = styled('div', `
   font-size: ${vars.xxxlargeFontSize};
   font-weight: 600;
   margin-bottom: 16px;
 `);
+*/
 
+/* Norv Comment
 const cssLeftAlignedHeader = styled(cssHeader, `
   text-align: left;
 `);
@@ -302,7 +323,9 @@ const cssParagraph = styled('div', `
   line-height: 18px;
   margin-bottom: 12px;
 `);
+*/
 
+/* Norv Comment
 const cssPrimaryButton = styled(bigPrimaryButton, `
   display: flex;
   justify-content: center;
@@ -310,7 +333,9 @@ const cssPrimaryButton = styled(bigPrimaryButton, `
   margin-top: 32px;
   text-align: center;
 `);
+*/
 
+/* Norv Comment
 const cssFullWidthButton = styled(cssPrimaryButton, `
   width: 100%;
 `);
@@ -336,3 +361,4 @@ const cssSparks = styled('div', `
   display: inline-block;
   background-repeat: no-repeat;
 `);
+*/
